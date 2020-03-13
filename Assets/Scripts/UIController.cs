@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
+	public ParticleSystem colorChangeParticle = null;
 	public Material colourChangeMaterial = null;
 	public List<Slider> colourSlidersRGB;
 	public Button runToggle = null;
@@ -56,11 +57,20 @@ public class UIController : MonoBehaviour
 
 	void charmeleonSkinColourOnValueChanged(float value)
 	{
+		// The colour that the sliders now represent
 		Color newColor = new Color();
+		// Calculate new colour off of value in sliders
 		for (int i = 0; i < colourSlidersRGB.Count; i++)
 		{
 			newColor[i] = colourSlidersRGB[i].value;
 		}
+		newColor.a = 1;
+
+		// Set the cube colour to new colour
 		colourChangeMaterial.color = newColor;
+
+		// Change particle start colour to new colour
+		ParticleSystem.MainModule particle = colorChangeParticle.main;
+		particle.startColor = newColor;
 	}
 }
