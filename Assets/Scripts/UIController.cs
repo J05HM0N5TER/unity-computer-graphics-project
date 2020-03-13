@@ -5,16 +5,25 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
+	// The particle system that is going to change colour
 	public ParticleSystem colorChangeParticle = null;
+	// The material that is going to change colour
 	public Material colourChangeMaterial = null;
+	// The array of the colour sliders
 	public List<Slider> colourSlidersRGB;
+	// The button that toggles the run animation
 	public Button runToggle = null;
+	// Button to quit application
+	public Button quitButton = null;
+	// THe animator that is in control of the animations
 	public Animator charmeleon = null;
+	// Value to keep track of the current state of the animations
 	private bool isRunning = false;
 
 	// Start is called before the first frame update
-	void Start()
+	private void Start()
 	{
+		// Check that there is a button
 		if (!runToggle)
 		{
 			Debug.LogError(nameof(runToggle) + " is not set");
@@ -27,14 +36,27 @@ public class UIController : MonoBehaviour
 
 		// Check that there is sliders
 		if (colourSlidersRGB.Count == 0)
-			Debug.LogError(nameof(runToggle) + " is not set");
+		{
+			Debug.LogError(nameof(colourSlidersRGB) + " is not set");
+		}
 		else
 		{
-			foreach(Slider currentColour in colourSlidersRGB)
+			foreach (Slider currentColour in colourSlidersRGB)
 			{
 				// Set up listeners for the slider when they change values
 				currentColour.onValueChanged.AddListener(charmeleonSkinColourOnValueChanged);
 			}
+			// Check to make sure that everything has started on the same colour
+			charmeleonSkinColourOnValueChanged(0);
+		}
+
+		if (!quitButton)
+		{
+			Debug.LogError(nameof(quitButton) + " is not set");
+		}
+		else
+		{
+			quitButton.onClick.AddListener(Application.Quit);
 		}
 
 	}
@@ -42,8 +64,9 @@ public class UIController : MonoBehaviour
 	/// <summary>
 	/// Runs when runToggle button is clicked
 	/// </summary>
-	void runToggleOnClick()
+	private void runToggleOnClick()
 	{
+		// Change the animation to the opposite that it is
 		if (isRunning)
 		{
 			charmeleon.SetTrigger("idleTransition");
@@ -52,10 +75,15 @@ public class UIController : MonoBehaviour
 		{
 			charmeleon.SetTrigger("runTransition");
 		}
+		// Set current status
 		isRunning = !isRunning;
 	}
 
-	void charmeleonSkinColourOnValueChanged(float value)
+	/// <summary>
+	/// Runs when the value of one of the colour sliders change
+	/// </summary>
+	/// <param name="value">What the value has changed to (not used)</param>
+	private void charmeleonSkinColourOnValueChanged(float value)
 	{
 		// The colour that the sliders now represent
 		Color newColor = new Color();
@@ -64,6 +92,7 @@ public class UIController : MonoBehaviour
 		{
 			newColor[i] = colourSlidersRGB[i].value;
 		}
+		// Set them to be not transparent because for some reason the default is
 		newColor.a = 1;
 
 		// Set the cube colour to new colour

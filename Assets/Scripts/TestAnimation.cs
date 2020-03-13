@@ -17,12 +17,14 @@ public class TestAnimation : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		// Keep track of timer
 		timer += Time.deltaTime;
 		
+		// When the timer is up
 		if (timer > timer_delay)
 		{
+			// Set animation to what it is not
 			is_idle = !is_idle;
-			timer = 0;
 			if (is_idle)
 			{
 				ani.SetTrigger("runTransition");
@@ -31,6 +33,8 @@ public class TestAnimation : MonoBehaviour
 			{
 				ani.SetTrigger("idleTransition");
 			}
+			// Reset timer
+			timer = 0;
 		}
 	}
 }
